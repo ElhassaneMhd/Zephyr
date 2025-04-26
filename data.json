@@ -1,9 +1,9 @@
 {
     "user": {
-        "name": "John",
-        "email": "",
-        "centre_id": 1,
-        "isSuperAdmin": "false"
+      "name": "John",
+      "email": "",
+      "centre_id": 1,
+      "role": "user"
     },
     "centre": {
         "id": 1,

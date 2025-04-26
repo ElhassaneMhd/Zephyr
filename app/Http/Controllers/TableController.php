@@ -13,7 +13,7 @@ class TableController extends Controller
     public function index()
     {
         $user = auth()->user();
-        if ($user->isSuperAdmin == 'true'){
+        if ($user->role == 'superAdmin'){
             $centres = Centre::all();
             foreach ($centres as $centre){
                 if ($centre->tables->count() !== 0){

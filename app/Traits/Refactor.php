@@ -40,7 +40,7 @@ trait Refactor
             "id" => $user->id,
             "name" => $user->name,
             "email" => $user->email,
-            "isSuperAdmin" => $user->isSuperAdmin,
+            "role" => $user->role,
             "centre" => $centre ? $this->refactorCentre($centre) : null,
             "created_at" => $user->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $user->updated_at->format('Y-m-d H:i:s'),

@@ -15,7 +15,7 @@ class CheckSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->isSuperAdmin === "true") {
+        if (auth()->check() && auth()->user()->role === "superAdmin") {
             return $next($request);
         }
         return response('Unauthorized.', 401);

@@ -22,12 +22,17 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@zephyr.com',
-            "isSuperAdmin" => 'true',
+            "role" => 'superAdmin',
         ]);
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@zephyr.com',
-            "isSuperAdmin" => 'false',
+            "role" => 'admin',
+        ]);
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@zephyr.com',
+            "role" => 'user',
         ]);
         Centre::factory()->create(['name' => 'Mazagan']);
         Centre::factory()->create(['name' => 'Ifrane']);

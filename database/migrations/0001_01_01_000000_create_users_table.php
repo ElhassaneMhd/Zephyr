@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->foreignId('centre_id')->constrained()->cascadeOnDelete();
-            $table->enum('isSuperAdmin' ,["true", "false" ])->default("false");
+            $table->enum('role' ,["superAdmin", "admin","user" ])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

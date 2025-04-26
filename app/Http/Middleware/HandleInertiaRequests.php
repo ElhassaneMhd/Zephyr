@@ -40,25 +40,22 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
        if( auth()->check()){
-           if( $request->user()->isSuperAdmin == "true") {
-               $centres = Centre::all();
-                $allCentres = [];
-                foreach ($centres as $c){
-                    $allCentres[] = ["id"=>$c->id, "name"=>$c->name];
-                }
-            }
+     
             $mainCentre = ["id"=>$request->user()->centre->id, "name"=>$request->user()->centre->name];
+        $allCentres = [];
+            foreach ($request->user()->centres ?? [] as $c){
+                $allCentres[] = ["id"=>$c->id, "name"=>$c->name];
+            }
         }
         return array_merge(parent::share($request), [
             'auth' => auth()->check() ? ([
                 "id" => $request->user()->id,
                 "name" => $request->user()->name,
                 "email" => $request->user()->email,
-                "isSuperAdmin" => $request->user()->isSuperAdmin,
+                "role" => $request->user()->role,
                 "mainCentre" => $mainCentre,
                 "centres" => $allCentres??[],
             ]) : null,
-            ]
-        );
+            ]);
     }
 }

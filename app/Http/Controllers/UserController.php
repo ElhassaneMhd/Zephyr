@@ -21,7 +21,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
             "centre_id"=>'required|exists:centres,id',
-            "isSuperAdmin"=>'in:true,false'
+            "role"=>'in:superAdmin,admin,user'
         ]);
         $data['password'] = Hash::make($data['password']);
         User::create($data);
@@ -33,7 +33,7 @@ class UserController extends Controller
             'name' => 'string',
             'email' => 'email',
             "centre_id"=>'exists:centres,id',
-            "isSuperAdmin"=>'in:true,false'
+            "role"=>'in:superAdmin,admin,user'
         ]);
         if (isset($request->password)) {
             $request->validate([

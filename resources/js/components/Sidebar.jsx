@@ -99,7 +99,7 @@ export default function Sidebar() {
                     className={`flex items-center gap-2 ${isExpanded ? "" : "flex-col"}`}
                 >
                     <ThemeToggler layout={isExpanded ? "long" : ""} />
-                    {user.isSuperAdmin === "true" && (
+                    {user.role === "superAdmin" && (
                         <Button
                             shape="icon"
                             onClick={() => {

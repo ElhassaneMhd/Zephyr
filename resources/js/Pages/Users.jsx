@@ -8,6 +8,7 @@ import { RULES } from '@/utils/constants';
 export default function Users({ users }) {
   const resourceName = 'User';
   const { navigate } = useNavigate();
+  const { user } = useUser();
 
   return (
     <>
@@ -68,8 +69,8 @@ export default function Users({ users }) {
             rules: { ...RULES.passwordConfirmation },
           },
           {
-            name: 'isSuperAdmin',
-            customComponent: <MakeSuperAdmin />,
+            name: 'role',
+            customComponent: <Roles />,
           },
         ]}
         formDefaults={{
@@ -81,12 +82,14 @@ export default function Users({ users }) {
           isSuperAdmin: 'false',
         }}
         fieldsToSearch={['name', 'email', 'centre']}
-        layoutOptions={{ actions: (def) => [def.edit, def.delete] }}
+        layoutOptions={{ actions: (def) => (user.role === 'superAdmin' ? [def.edit, def.delete] : []) }}
         canView={false}
         onAdd={(data) => {
+          if (user.role !== 'superAdmin') return;
           navigate({ url: 'users.store', method: 'POST', data: { ...data, centre_id: data.centre.id } });
         }}
         onUpdate={(data) => {
+          if (user.role !== 'superAdmin') return;
           navigate({
             url: 'users.update',
             params: data.id,
@@ -101,6 +104,8 @@ export default function Users({ users }) {
 
 function Centers({ getValue, onChange, errorMessage }) {
   const { user } = useUser();
+
+  console.log(user);
 
   return (
     <div className='col-span-2 flex flex-col gap-1.5'>
@@ -131,14 +136,34 @@ function Centers({ getValue, onChange, errorMessage }) {
   );
 }
 
-function MakeSuperAdmin({ getValue, setValue, errorMessage }) {
+function Roles({ getValue, onChange, errorMessage }) {
+  const roles = ['Super Admin', 'Admin', 'User'];
+
   return (
-    <div className='mt-2 flex h-8 items-center gap-1.5'>
-      <CheckBox
-        checked={getValue('isSuperAdmin') === 'true'}
-        onChange={(e) => setValue('isSuperAdmin', String(e.target.checked))}
-      />
-      <Label label='Make Super Admin' message={errorMessage} />
+    <div className='col-span-2 flex flex-col gap-1.5'>
+      <Label label='Role' message={errorMessage} />
+      <DropDown
+        toggler={
+          <DropDown.Toggler>
+            <span className='capitalize'>{(getValue('role') && getValue('role')) || 'Choose a role'}</span>
+          </DropDown.Toggler>
+        }
+        options={{
+          className: 'overflow-auto max-h-[300px] w-[230px]',
+          shouldCloseOnClick: false,
+        }}
+      >
+        {roles.map((t) => (
+          <DropDown.Option
+            key={t}
+            onClick={() => onChange(t)}
+            className='capitalize'
+            isCurrent={t === getValue('role') && getValue('role')}
+          >
+            {t}
+          </DropDown.Option>
+        ))}
+      </DropDown>
     </div>
   );
 }

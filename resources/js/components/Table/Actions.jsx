@@ -61,27 +61,45 @@ export function Actions({ row, actions, onUpdate }) {
   };
 
   return (
-    <DropDown
-      toggler={
-        <Button shape='icon'>
-          <IoEllipsisHorizontalSharp />
-        </Button>
-      }
-    >
+    <div className='flex gap-1'>
       {getActions()
-        .filter((action) => !action.hidden?.(row))
+        .filter((action) => !action.hidden?.(row) && action.placement === 'outside')
         .map((action) => (
-          <DropDown.Option
+          <Button
             key={action.text}
             onClick={(e) => {
               e.stopPropagation();
               action.onClick(row);
             }}
+            display={'with-icon'}
+            color={'tertiary'}
           >
             {action.icon}
             {action.text}
-          </DropDown.Option>
+          </Button>
         ))}
-    </DropDown>
+      <DropDown
+        toggler={
+          <Button shape='icon'>
+            <IoEllipsisHorizontalSharp />
+          </Button>
+        }
+      >
+        {getActions()
+          .filter((action) => !action.hidden?.(row) && action.placement !== 'outside')
+          .map((action) => (
+            <DropDown.Option
+              key={action.text}
+              onClick={(e) => {
+                e.stopPropagation();
+                action.onClick(row);
+              }}
+            >
+              {action.icon}
+              {action.text}
+            </DropDown.Option>
+          ))}
+      </DropDown>
+    </div>
   );
 }

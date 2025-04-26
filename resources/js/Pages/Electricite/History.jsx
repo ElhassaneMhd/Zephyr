@@ -1,5 +1,5 @@
 import { Button, Modal } from '@/components/ui';
-import { useConfirmationModal, useNavigate } from '@/hooks';
+import { useConfirmationModal, useNavigate, useUser } from '@/hooks';
 import { formatDate } from '@/utils/helpers';
 import { IoTrashOutline } from 'react-icons/io5';
 
@@ -25,6 +25,7 @@ export function History({ history, onClose }) {
 function HistoryItem({ index, date, id }) {
   const { navigate } = useNavigate();
   const { openModal } = useConfirmationModal();
+  const { user } = useUser();
 
   return (
     <div className='grid grid-cols-[1fr,1fr,32px] items-center px-5 even:bg-background-secondary'>
@@ -32,23 +33,25 @@ function HistoryItem({ index, date, id }) {
         {formatDate(date, true, 'DATETIME_MED_WITH_WEEKDAY')}
       </span>
       <span className='py-3 font-medium text-text-primary'>{index}</span>
-      <Button
-        shape='icon'
-        onClick={() => {
-          openModal({
-            message: 'You are about to delete a history item. Do you wish to proceed?',
-            title: 'Delete History',
-            confirmText: 'Delete',
-            onConfirm: () =>
-              navigate({
-                url: `/row/${id}/history/delete`,
-                method: 'DELETE',
-              }),
-          });
-        }}
-      >
-        <IoTrashOutline />
-      </Button>
+      {user.role === 'superAdmin' && (
+        <Button
+          shape='icon'
+          onClick={() => {
+            openModal({
+              message: 'You are about to delete a history item. Do you wish to proceed?',
+              title: 'Delete History',
+              confirmText: 'Delete',
+              onConfirm: () =>
+                navigate({
+                  url: `/row/${id}/history/delete`,
+                  method: 'DELETE',
+                }),
+            });
+          }}
+        >
+          <IoTrashOutline />
+        </Button>
+      )}
     </div>
   );
 }

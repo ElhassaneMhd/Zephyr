@@ -9,6 +9,7 @@ import { MdHistory } from 'react-icons/md';
 import { History } from './History';
 import { Label } from '@/components/ui/InputField';
 import { DropDown } from '@/components/ui';
+import { FaPlus } from 'react-icons/fa6';
 
 const resourceName = 'Record';
 const routeName = '/electricite';
@@ -37,7 +38,7 @@ export default function Counter({ type, tables, history }) {
       <Head title={`Electricite | Compteur ${type === 'general' ? 'General' : 'Divisionnel'}`} />
       <div className='flex items-center justify-between gap-6'>
         <Heading>Compteur {type === 'general' ? 'General' : 'Divisionnel'}</Heading>
-        {current && <Tabs tabs={Object.keys(tables)} onChange={(v) => setCurrent(v)} />}
+        {current && <Tabs tabs={Object.keys(tables).sort()} onChange={(v) => setCurrent(v)} />}
       </div>
       <TableLayout
         routeName={routeName}
@@ -167,7 +168,7 @@ export default function Counter({ type, tables, history }) {
         // hack
         updateDefaultValues={(row) => {
           return {
-            id:row.id,
+            id: row.id,
             ...formDefaults,
             name: row.name,
             prev_date: getIsoDate(row.date).toFormat("yyyy-MM-dd'T'HH:mm:ss"),
@@ -178,16 +179,19 @@ export default function Counter({ type, tables, history }) {
         }}
         fieldsToSearch={['name']}
         selectedOptions={{
-          deleteOptions: {
-            resourceName,
-            onConfirm: (ids) => {
-              navigate({
-                url: `${routeName}/multiple/destroy`,
-                method: 'POST',
-                data: { ids },
-              });
-            },
-          },
+          deleteOptions:
+            user.role === 'superAdmin'
+              ? {
+                  resourceName,
+                  onConfirm: (ids) => {
+                    navigate({
+                      url: `${routeName}/multiple/destroy`,
+                      method: 'POST',
+                      data: { ids },
+                    });
+                  },
+                }
+              : null,
         }}
         canView={(data) => navigate({ url: `/row/${type}/${data.id}/history` })}
         layoutOptions={{
@@ -197,11 +201,15 @@ export default function Counter({ type, tables, history }) {
               icon: <MdHistory />,
               onClick: (row) => navigate({ url: `/row/${type}/${row.id}/history` }),
             },
-            def.edit,
-            def.delete,
+            ...(user.role === 'superAdmin' ? [def.edit, def.delete] : []),
+            ...(['superAdmin', 'admin'].includes(user.role)
+              ? [{ text: 'New Saisie', icon: <FaPlus />, onClick: def.edit.onClick, placement: 'outside' }]
+              : []),
           ],
+          displayNewRecord: false,
         }}
         onAdd={(row) => {
+          if (user.role !== 'superAdmin') return;
           const { name, date, index, consummation, puissance, cos } = row;
           navigate({
             url: `${routeName}/store`,
@@ -219,6 +227,7 @@ export default function Counter({ type, tables, history }) {
           });
         }}
         onUpdate={(row) => {
+          if (user.role !== 'superAdmin') return;
           navigate({
             url: `${routeName}/update/${row.id}`,
             method: 'PUT',

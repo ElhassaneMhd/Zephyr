@@ -42,10 +42,7 @@ class HandleInertiaRequests extends Middleware
        if( auth()->check()){
      
             $mainCentre = ["id"=>$request->user()->centre->id, "name"=>$request->user()->centre->name];
-        $allCentres = [];
-            foreach ($request->user()->centres ?? [] as $c){
-                $allCentres[] = ["id"=>$c->id, "name"=>$c->name];
-            }
+            $allCentres = $this->refactorManyElements(Centre::all(),'centres');
         }
         return array_merge(parent::share($request), [
             'auth' => auth()->check() ? ([

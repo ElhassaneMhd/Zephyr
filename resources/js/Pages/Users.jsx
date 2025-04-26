@@ -137,7 +137,11 @@ function Centers({ getValue, onChange, errorMessage }) {
 }
 
 function Roles({ getValue, onChange, errorMessage }) {
-  const roles = ['Super Admin', 'Admin', 'User'];
+  const roles = [
+    { value: 'superAdmin', label: 'Super Admin' },
+    { value: 'admin', label: 'Admin' },
+    { value: 'user', label: 'User' },
+  ];
 
   return (
     <div className='col-span-2 flex flex-col gap-1.5'>
@@ -145,7 +149,9 @@ function Roles({ getValue, onChange, errorMessage }) {
       <DropDown
         toggler={
           <DropDown.Toggler>
-            <span className='capitalize'>{(getValue('role') && getValue('role')) || 'Choose a role'}</span>
+            <span className='capitalize'>
+              {(getValue('role') && roles.find((r) => r.value === getValue('role')).label) || 'Choose a role'}
+            </span>
           </DropDown.Toggler>
         }
         options={{
@@ -153,14 +159,14 @@ function Roles({ getValue, onChange, errorMessage }) {
           shouldCloseOnClick: false,
         }}
       >
-        {roles.map((t) => (
+        {roles.map(({ label, value }) => (
           <DropDown.Option
-            key={t}
-            onClick={() => onChange(t)}
+            key={value}
+            onClick={() => onChange(value)}
             className='capitalize'
-            isCurrent={t === getValue('role') && getValue('role')}
+            isCurrent={value === getValue('role') && getValue('role')}
           >
-            {t}
+            {label}
           </DropDown.Option>
         ))}
       </DropDown>

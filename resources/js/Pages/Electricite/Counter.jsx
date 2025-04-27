@@ -206,7 +206,7 @@ export default function Counter({ type, tables, history }) {
               ? [{ text: 'New Saisie', icon: <FaPlus />, onClick: def.edit.onClick, placement: 'outside' }]
               : []),
           ],
-          displayNewRecord: false,
+          displayNewRecord: user.role=== 'superAdmin',
         }}
         onAdd={(row) => {
           if (user.role !== 'superAdmin') return;

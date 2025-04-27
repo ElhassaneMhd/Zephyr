@@ -25,37 +25,41 @@ export default function AppBar() {
           <span className='text-xs font-medium capitalize text-text-tertiary'>{getRoleLabel(role)}</span>
         </div>
       </div>
-      <div>
-        {Array.isArray(centres) && centres.length > 0 ? (
-          <DropDown
-            toggler={
-              <DropDown.Toggler>
-                <FaCity />
-                {mainCentre.name}
-              </DropDown.Toggler>
-            }
-            togglerClassName='w-fit gap-2'
-          >
-            {centres.map((el) => (
-              <DropDown.Option
-                key={el.id}
-                className='justify-center'
-                isCurrent={mainCentre.id === el.id}
-                onClick={() =>
-                  navigate({
-                    url: `/centres/${el.id}/access`,
-                    method: 'POST',
-                  })
-                }
-              >
-                {el.name}
-              </DropDown.Option>
-            ))}
-          </DropDown>
-        ) : (
-          <span className='text-sm font-medium capitalize text-text-secondary'>{mainCentre.name}</span>
-        )}
-      </div>
+      {role === 'superAdmin' ? (
+        <div>
+          {Array.isArray(centres) && centres.length > 0 ? (
+            <DropDown
+              toggler={
+                <DropDown.Toggler>
+                  <FaCity />
+                  {mainCentre.name}
+                </DropDown.Toggler>
+              }
+              togglerClassName='w-fit gap-2'
+            >
+              {centres.map((el) => (
+                <DropDown.Option
+                  key={el.id}
+                  className='justify-center'
+                  isCurrent={mainCentre.id === el.id}
+                  onClick={() =>
+                    navigate({
+                      url: `/centres/${el.id}/access`,
+                      method: 'POST',
+                    })
+                  }
+                >
+                  {el.name}
+                </DropDown.Option>
+              ))}
+            </DropDown>
+          ) : (
+            <span className='text-sm font-medium capitalize text-text-secondary'>{mainCentre.name}</span>
+          )}
+        </div>
+      ) : (
+        <span className='text-sm font-medium capitalize text-text-secondary'>{mainCentre.name}</span>
+      )}
     </div>
   );
 }

@@ -18,6 +18,7 @@ class Table extends Model
         'name',
         'date',
         'index',
+        'category',
         'consummation',
         'puissance',
         'cos',

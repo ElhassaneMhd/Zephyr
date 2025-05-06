@@ -132,7 +132,7 @@ export function TableProvider({
     isOpen: false,
     type: 'create',
   });
-  const [filters, setFilters] = useState(defaultFilters);
+  const [filters, setFilters] = useState(defaultFilters||{});
   const [state, setState] = useRemember({ checked: {} });
   const { url } = usePage();
 
@@ -162,6 +162,7 @@ export function TableProvider({
   const direction = searchParams.get('dir') || defaultDirection;
 
   const appliedFiltersNumber = (filter) => {
+
     if (filter === 'all')
       return Object.values(filters)
         .flat()

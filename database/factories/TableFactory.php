@@ -25,7 +25,10 @@ class TableFactory extends Factory
             "puissance" => $this->faker->randomFloat(0, 0, 300),
             "cos" => $this->faker->randomFloat(4, 0, 1),
             "centre_id" => $this->faker->randomElement([1,2,3,4]),
-            "counter" =>$this->faker->randomElement(["general","divisional"])
+            "counter" =>$this->faker->randomElement(["general","divisional"]),
+            "category" =>$this->faker->randomElement(["electricite","eau","gas","biomass","carbuant"]),
+            "created_at" => now(),
+            "updated_at" => now()
         ];
     }
 }

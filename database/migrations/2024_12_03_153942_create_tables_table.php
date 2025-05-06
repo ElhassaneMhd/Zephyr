@@ -24,6 +24,7 @@ return new class extends Migration
             $table->double('cos')->nullable();
             $table->foreignId('centre_id')->constrained()->cascadeOnDelete();
             $table->enum('counter' ,['general' ,'divisional'])->nullable();
+            $table->enum('category' ,['electricite','eau','gas','biomass','carbuant'])->nullable();
             $table->timestamps();
         });
     }

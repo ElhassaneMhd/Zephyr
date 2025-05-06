@@ -1,4 +1,3 @@
-
 <?php
 use App\Http\Controllers\CentreController;
 use App\Http\Controllers\HistoricController;
@@ -16,9 +15,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // 
+    
     foreach (['electricite','eau','carburan','gaz','biomasse'] as $category) {
-        Route::get('/'.$category, function () {
+        Route::get('/'.$category, function () use ($category) {
             return redirect( $category.'/general');
         });
     }
@@ -37,6 +36,7 @@ Route::middleware('auth')->group(function () {
     foreach (['carburan','gaz','biomasse' ] as $category) {
         Route::get('/'.$category.'/general', [TableController::class ,'notFound'])->name($category.'.general');
     }
+    
  });
 
 Route::middleware(['auth', CheckSuperAdmin::class])->group(function () {

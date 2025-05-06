@@ -15,20 +15,34 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Electricite
     Route::get('/electricite', function () {
         return redirect('/electricite/general');
     });
-    Route::get('/electricite/general', [TableController::class ,'getGenerale'])->name('general');
-    Route::get('/electricite/divisional', [TableController::class ,'getDivisional'])->name('divisional');
-    Route::post('/electricite/store', [TableController::class ,'store'])->name('row.store');
-    Route::put('/electricite/update/{id}', [TableController::class ,'update'])->name(' row.update');
-    Route::delete('/electricite/destroy/{id}', [TableController::class ,'destroy'])->name('row.destroy');
-    Route::post('/electricite/multiple/destroy', [TableController::class ,'multipleDestroy'])->name('row.multiple.destroy');
+    Route::get('/electricite/general', [TableController::class ,'getGenerale'])->name('electricite.general');
+    Route::get('/electricite/divisional', [TableController::class ,'getDivisional'])->name('electricite.divisional');
+    Route::post('/electricite/store', [TableController::class ,'store'])->name('electricite.row.store');
+    Route::put('/electricite/update/{id}', [TableController::class ,'update'])->name('electricite. row.update');
+    Route::delete('/electricite/destroy/{id}', [TableController::class ,'destroy'])->name('electricite.row.destroy');
+    Route::post('/electricite/multiple/destroy', [TableController::class ,'multipleDestroy'])->name('electricite.row.multiple.destroy');
+
+    // Eau
+    Route::get('/eau', function () {
+        return redirect('/eau/general');
+    });
+    Route::get('/eau/general', [TableController::class ,'getGenerale'])->name('eau.general');
+    Route::get('/eau/divisional', [TableController::class ,'getDivisional'])->name('eau.divisional');
+    Route::post('/eau/store', [TableController::class ,'store'])->name('eau.row.store');
+    Route::put('/eau/update/{id}', [TableController::class ,'update'])->name('eau. row.update');
+    Route::delete('/eau/destroy/{id}', [TableController::class ,'destroy'])->name('eau.row.destroy');
+    Route::post('/eau/multiple/destroy', [TableController::class ,'multipleDestroy'])->name('eau.row.multiple.destroy');
+
 
     Route::get('/row/{counter}/{id}/history', [HistoricController::class ,'index'])->name('history');
     Route::delete('/row/{id}/history/delete', [HistoricController::class ,'destroy'])->name('history.destroy');
 
-    Route::get('/eau', [TableController::class ,'notFound'])->name('eau');
+    // Route::get('/eau', [TableController::class ,'notFound'])->name('eau');
     Route::get('/carburan', [TableController::class ,'notFound'])->name('carburan');
     Route::get('/gaz', [TableController::class ,'notFound'])->name('gaz');
     Route::get('/biomasse', [TableController::class ,'notFound'])->name('biomasse');

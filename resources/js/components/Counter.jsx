@@ -12,10 +12,9 @@ import { DropDown } from '@/components/ui';
 import { FaPlus } from 'react-icons/fa6';
 
 const resourceName = 'Record';
-const routeName = '/electricite';
 
-export default function Counter({ type, tables, history }) {
-  const [current, setCurrent] = useState(tables ? Object.keys(tables)[0] : null);
+export default function Counter({ title, type, routeName, tables, history }) {
+  const [current, setCurrent] = useState(tables ? Object.keys(tables).sort()[0] : null);
   const { user } = useUser();
   const { navigate } = useNavigate();
 
@@ -35,7 +34,7 @@ export default function Counter({ type, tables, history }) {
 
   return (
     <>
-      <Head title={`Electricite | Compteur ${type === 'general' ? 'General' : 'Divisionnel'}`} />
+      <Head title={title} />
       <div className='flex items-center justify-between gap-6'>
         <Heading>Compteur {type === 'general' ? 'General' : 'Divisionnel'}</Heading>
         {current && <Tabs tabs={Object.keys(tables).sort()} onChange={(v) => setCurrent(v)} />}
@@ -206,7 +205,7 @@ export default function Counter({ type, tables, history }) {
               ? [{ text: 'New Saisie', icon: <FaPlus />, onClick: def.edit.onClick, placement: 'outside' }]
               : []),
           ],
-          displayNewRecord: user.role=== 'superAdmin',
+          displayNewRecord: user.role === 'superAdmin',
         }}
         onAdd={(row) => {
           if (user.role !== 'superAdmin') return;

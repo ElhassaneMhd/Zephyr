@@ -5,9 +5,9 @@ namespace App\Traits;
 trait Get
 {
 
-        protected function getCounters($elements){
+        protected function getCounters($category, $counter){
             $user = auth()->user();
-            $counter = $user->centre->tables->where('counter', $elements)??[];
+            $counter = $user->centre->tables->where('category' , $category)->where('counter', $counter) ?? [];
             return $this->refactorManyElements($counter, 'tables');
         }
 

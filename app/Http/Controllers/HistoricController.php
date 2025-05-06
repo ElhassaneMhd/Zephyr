@@ -9,16 +9,12 @@ use Inertia\Inertia;
 
 class HistoricController extends Controller
 {
-    public function index($counter, $id)
+    public function index($category,$counter, $id)
     {
         $table = Table::findOrFail($id);
         $history = $table->historics;
-        if ($counter === 'general') {
-            $tables = $this->getCounters('general');
-            return Inertia::render('Electricite/General', compact('tables', 'history'));
-        }
-        $tables = $this->getCounters('divisional');
-        return Inertia::render('Electricite/Divisional', compact('tables', 'history'));
+        $tables = $this->getCounters($counter);
+        return Inertia::render(ucfirst($category).'/'.ucfirst($counter), compact('tables', 'history'));
     }
 
     public function destroy($id)

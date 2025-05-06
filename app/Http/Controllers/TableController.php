@@ -10,36 +10,14 @@ use Inertia\Inertia;
 class TableController extends Controller
 {
 
-    public function index()
+    public function getCounter($category,$counter)
     {
-        $user = auth()->user();
-        if ($user->role == 'superAdmin'){
-            $centres = Centre::all();
-            foreach ($centres as $centre){
-                if ($centre->tables->count() !== 0){
-                    $tables[$centre->name] = $this->refactorManyElements($centre->tables, 'tables');
-                }
-            }
-        }else{
-            $allTables = $user->centre->tables;
-            $tables = $this->refactorManyElements($allTables, 'tables');
-        }
-        return response()->json($tables);
+        $tables = $this->getCounters($category,$counter);
+        $pageTitle = ucfirst($category) . '/' . ucfirst($counter);
+        return Inertia::render($pageTitle ,compact('tables'));
     }
 
-    public function getGenerale()
-    {
-
-        $tables = $this->getCounters('general');
-        return Inertia::render('Electricite/General',compact('tables'));
-    }
-    public function getDivisional()
-    {
-        $tables =$tables = $this->getCounters('divisional');
-        return Inertia::render('Electricite/Divisional',compact('tables'));
-    }
-
-    public function store(Request $request)
+    public function store(Request $request,$category)
     {
         $centre = $request->user()->centre;
         $data =$request->validate([
@@ -49,8 +27,9 @@ class TableController extends Controller
             'index' => 'required|numeric',
             'consummation' => 'required|numeric',
             'counter' => 'required|in:general,divisional',
+            'centre_id' => 'required|exists:centres,id',
         ]);
-        if ( $data['counter'] == 'general'){
+        if ( $data['counter'] == 'general' && $category == 'electricite'){
             $request->validate([
                 'cos' => 'required|numeric',
                 'puissance' => 'required|numeric',
@@ -58,11 +37,12 @@ class TableController extends Controller
             $data['cos'] = $request->cos;
             $data['puissance'] = $request->puissance;
         }
-        $data['centre_id'] = $centre->id;
+        $data['category'] = $category;
         Table::create(attributes: $data);
-       return redirect('/electricite/'.$request->counter);
+       return redirect($category."/".$request->counter);
     }
-    public function update(Request $request, $id)
+
+    public function update(Request $request,$category, $id)
     {
         $table = Table::findOrFail($id);
         $request->validate([
@@ -74,15 +54,17 @@ class TableController extends Controller
                 $counter = $table->counter;
 
         $table->update($request->all());
-       return redirect('/electricite/'.$counter);
+       return redirect($category."/".$counter);
     }
-    public function destroy($id)
+
+    public function destroy($category,$id)
     {
         $table = Table::findOrFail($id);
         $counter = $table->counter;
         $table->delete();
-       return redirect('/electricite/'.$counter);
+       return redirect($category."/".$counter);
     }
+
     public function multipleDestroy(Request $request)
     {
         $ids = $request->ids ??[];

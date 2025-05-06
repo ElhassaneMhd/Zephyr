@@ -36,8 +36,15 @@ const routes = [
       { label: 'Compteur Divisionnel', href: '/eau/divisional' },
     ],
   },
-  { icon: <RiGasStationLine />, label: 'Carburan', href: '/carburan' },
-  { icon: <LiaFireSolid />, label: 'Gaz', href: '/gaz' },
+  { icon: <RiGasStationLine />, label: 'Carburant', href: '/carburant' },
+  {
+    icon: <LiaFireSolid />,
+    label: 'Gaz',
+    sub: [
+      { label: 'Compteur General', href: '/gaz/general' },
+      { label: 'Compteur Divisionnel', href: '/gaz/divisional' },
+    ],
+  },
   {
     icon: <MdOutlineEnergySavingsLeaf />,
     label: 'Biomasse',

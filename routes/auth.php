@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/row/{category}/{counter}/{id}/history', [HistoricController::class ,'index'])->name('history');
     Route::delete('/row/{id}/history/delete', [HistoricController::class ,'destroy'])->name('history.destroy');
 
-    Route::get('/carburan', [TableController::class ,'notFound'])->name('carburan');
+    Route::get('/carburant', [TableController::class ,'notFound'])->name('carburant');
     Route::get('/gaz', [TableController::class ,'notFound'])->name('gaz');
     Route::get('/biomasse', [TableController::class ,'notFound'])->name('biomasse');
 

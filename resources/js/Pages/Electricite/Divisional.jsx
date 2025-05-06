@@ -8,6 +8,7 @@ export default function Divisional({ tables, history }) {
       type='divisional'
       tables={tables}
       history={history}
+      exclude={['puissance', 'cos']} 
     />
   );
 }

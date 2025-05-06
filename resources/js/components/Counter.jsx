@@ -1,10 +1,10 @@
+import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 import { Heading } from '@/components/Heading';
 import Tabs from '@/components/ui/Tabs';
 import { useNavigate, useUser } from '@/hooks';
 import { TableLayout } from '@/layouts/TableLayout';
 import { formatDate, getFirstOfCurrentMonthAtMidnight, getIsoDate } from '@/utils/helpers';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
 import { MdHistory } from 'react-icons/md';
 import { History } from './History';
 import { Label } from '@/components/ui/InputField';
@@ -13,10 +13,12 @@ import { FaPlus } from 'react-icons/fa6';
 
 const resourceName = 'Record';
 
-export default function Counter({ title, type, routeName, tables, history }) {
+export default function Counter({ title, type, routeName, tables, history, exclude = [] }) {
   const [current, setCurrent] = useState(tables ? Object.keys(tables).sort()[0] : null);
   const { user } = useUser();
   const { navigate } = useNavigate();
+
+  const shouldInclude = (field) => !exclude.includes(field);
 
   const formDefaults = {
     table_name: current,
@@ -26,10 +28,8 @@ export default function Counter({ title, type, routeName, tables, history }) {
     date: getFirstOfCurrentMonthAtMidnight(),
     index: 0,
     consummation: 0,
-    ...(type === 'general' && {
-      puissance: 0,
-      cos: 0,
-    }),
+    ...(shouldInclude('puissance') && { puissance: 0 }),
+    ...(shouldInclude('cos') && { cos: 0 }),
   };
 
   return (
@@ -69,7 +69,7 @@ export default function Counter({ title, type, routeName, tables, history }) {
             visible: true,
             type: 'number',
           },
-          ...(type === 'general'
+          ...(shouldInclude('puissance')
             ? [
                 {
                   key: 'puissance',
@@ -77,6 +77,10 @@ export default function Counter({ title, type, routeName, tables, history }) {
                   visible: true,
                   type: 'number',
                 },
+              ]
+            : []),
+          ...(shouldInclude('cos')
+            ? [
                 {
                   key: 'cos',
                   displayLabel: 'COS Phi',
@@ -139,7 +143,7 @@ export default function Counter({ title, type, routeName, tables, history }) {
             format: (val) => Number(parseFloat(val).toFixed(2)),
             calculate: (values) => values.index - values.prev_index,
           },
-          ...(type === 'general'
+          ...(shouldInclude('puissance')
             ? [
                 {
                   name: 'puissance',
@@ -148,6 +152,10 @@ export default function Counter({ title, type, routeName, tables, history }) {
                   min: 0,
                   rules: { min: { value: 0, message: 'Puissance cannot be less than 0' } },
                 },
+              ]
+            : []),
+          ...(shouldInclude('cos')
+            ? [
                 {
                   name: 'cos',
                   label: 'COS Phi',
@@ -209,7 +217,12 @@ export default function Counter({ title, type, routeName, tables, history }) {
         }}
         onAdd={(row) => {
           if (user.role !== 'superAdmin') return;
-          const { name, date, index, consummation, puissance, cos } = row;
+          const { name, date, index, consummation, table_name } = row;
+
+          const additionalFields = {};
+          if (shouldInclude('puissance')) additionalFields.puissance = row.puissance;
+          if (shouldInclude('cos')) additionalFields.cos = row.cos;
+
           navigate({
             url: `${routeName}/store`,
             method: 'POST',
@@ -218,12 +231,14 @@ export default function Counter({ title, type, routeName, tables, history }) {
               date,
               index,
               consummation,
-              ...(type === 'general' && { puissance, cos }),
-              table_name: current,
+              table_name,
               centre_id: user.mainCentre.id,
               counter: type,
+              ...additionalFields,
             },
           });
+
+          if (current !== row.table_name) setCurrent(row.table_name);
         }}
         onUpdate={(row) => {
           if (user.role !== 'superAdmin') return;

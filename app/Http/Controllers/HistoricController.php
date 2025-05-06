@@ -13,7 +13,7 @@ class HistoricController extends Controller
     {
         $table = Table::findOrFail($id);
         $history = $table->historics;
-        $tables = $this->getCounters($counter);
+        $tables = $this->getCounters($category,$counter);
         return Inertia::render(ucfirst($category).'/'.ucfirst($counter), compact('tables', 'history'));
     }
 

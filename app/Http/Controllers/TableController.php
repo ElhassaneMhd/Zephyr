@@ -65,13 +65,13 @@ class TableController extends Controller
        return redirect($category."/".$counter);
     }
 
-    public function multipleDestroy(Request $request)
+    public function multipleDestroy(Request $request,$category)
     {
         $ids = $request->ids ??[];
         $table = Table::findOrFail($ids[0]);
         $counter = $table->counter;
         Table::whereIn('id',$ids)->delete();
-       return redirect('/electricite/'.$counter);
+       return redirect($category."/".$counter);
     }
     public function notFound()
     {

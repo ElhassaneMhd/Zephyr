@@ -200,13 +200,17 @@ export default function Counter({ title, type, routeName, tables, history, exclu
                 }
               : null,
         }}
-        canView={(data) => navigate({ url: `/row/${type}/${data.id}/history` })}
+        canView={(data) =>
+          navigate({
+            url: `/row${routeName}/${type}/${data.id}/history`,
+          })
+        }
         layoutOptions={{
           actions: (def) => [
             {
               text: 'History',
               icon: <MdHistory />,
-              onClick: (row) => navigate({ url: `/row/${type}/${row.id}/history` }),
+              onClick: (row) => navigate({ url: `/row${routeName}/${type}/${row.id}/history` }),
             },
             ...(user.role === 'superAdmin' ? [def.edit, def.delete] : []),
             ...(['superAdmin', 'admin'].includes(user.role)

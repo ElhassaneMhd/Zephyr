@@ -17,11 +17,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // 
-    Route::get('/{category}', function ($category) {
-        return redirect( $category.'/general');
-    });
+    foreach (['electricite','eau','carburan','gaz','biomasse'] as $category) {
+        Route::get('/'.$category, function () {
+            return redirect( $category.'/general');
+        });
+    }
+   
     Route::get('/{category}/{type}', [TableController::class ,'getCounter'])->name('category.type');
-    
     Route::post('/{category}/store', [TableController::class ,'store'])->name('{category}.row.store');
     Route::put('/{category}/update/{id}', [TableController::class ,'update'])->name('{category}. row.update');
     Route::delete('/{category}/destroy/{id}', [TableController::class ,'destroy'])->name('{category}.row.destroy');
@@ -32,12 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/row/{category}/{counter}/{id}/history', [HistoricController::class ,'index'])->name('history');
     Route::delete('/row/{id}/history/delete', [HistoricController::class ,'destroy'])->name('history.destroy');
 
-    foreach (['carbuant','gas','biomass' ] as $category) {
-        Route::get('/'.$category.'/general', function () {
-            return redirect($category.'/general');
-        });
+    foreach (['carburan','gaz','biomasse' ] as $category) {
+        Route::get('/'.$category.'/general', [TableController::class ,'notFound'])->name($category.'.general');
     }
-    
  });
 
 Route::middleware(['auth', CheckSuperAdmin::class])->group(function () {

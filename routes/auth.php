@@ -15,8 +15,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    
-    foreach (['electricite','eau','carburan','gaz','biomasse'] as $category) {
+    foreach (['electricite','eau'] as $category) {
         Route::get('/'.$category, function () use ($category) {
             return redirect( $category.'/general');
         });
@@ -29,14 +28,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/{category}/multiple/destroy', [TableController::class ,'multipleDestroy'])->name('{category}.row.multiple.destroy');
 
 
-
     Route::get('/row/{category}/{counter}/{id}/history', [HistoricController::class ,'index'])->name('history');
     Route::delete('/row/{id}/history/delete', [HistoricController::class ,'destroy'])->name('history.destroy');
 
-    foreach (['carburan','gaz','biomasse' ] as $category) {
-        Route::get('/'.$category.'/general', [TableController::class ,'notFound'])->name($category.'.general');
-    }
-    
+    Route::get('/carburan', [TableController::class ,'notFound'])->name('carburan');
+    Route::get('/gaz', [TableController::class ,'notFound'])->name('gaz');
+    Route::get('/biomasse', [TableController::class ,'notFound'])->name('biomasse');
+
+
  });
 
 Route::middleware(['auth', CheckSuperAdmin::class])->group(function () {

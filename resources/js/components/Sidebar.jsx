@@ -40,10 +40,7 @@ const routes = [
   {
     icon: <LiaFireSolid />,
     label: 'Gaz',
-    sub: [
-      { label: 'Compteur General', href: '/gaz/general' },
-      { label: 'Compteur Divisionnel', href: '/gaz/divisional' },
-    ],
+    href : '/gaz'
   },
   {
     icon: <MdOutlineEnergySavingsLeaf />,

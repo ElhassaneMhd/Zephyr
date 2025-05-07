@@ -38,5 +38,6 @@ class DatabaseSeeder extends Seeder
         Centre::factory()->create(['name' => 'Ifrane']);
         Centre::factory()->create(['name' => 'Agadir']);
         Centre::factory()->create(['name' => 'Targa']);
+        Centre::factory()->create(['name' => 'Club Narjiss Rabat']);
     }
 }

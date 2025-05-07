@@ -17,7 +17,7 @@ class CentreFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->randomElement(["Targa","Ifrane","Agadir","Mazagan"]),
+            'name' => $this->faker->randomElement(["Targa","Ifrane","Agadir","Mazagan","Club Narjiss Rabat"]),
         ];
     }
 }

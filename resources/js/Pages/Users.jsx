@@ -37,10 +37,17 @@ export default function Users({ users }) {
             format: (value) => value.name,
           },
           {
-            key: 'isSuperAdmin',
-            displayLabel: 'Status',
+            key: 'role',
+            displayLabel: 'Role',
             visible: true,
-            format: (value) => (value === 'true' ? 'Super Admin' : 'Admin'),
+            format: (value) => {
+              const roles = [
+                { value: 'superAdmin', label: 'Super Admin' },
+                { value: 'admin', label: 'Admin' },
+                { value: 'user', label: 'User' },
+              ];
+              return roles.find((r) => r.value === value)?.label || '';
+            },
           },
         ]}
         formFields={[
